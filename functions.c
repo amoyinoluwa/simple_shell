@@ -33,6 +33,8 @@ char *_strdup(char *str)
 	return (NULL);	
 }
 
+
+
 /**
  * tokens - converts str to tokens
  * @buffer: str buf
@@ -41,16 +43,17 @@ char *_strdup(char *str)
 
 char **tokens(char *buffer)
 {
-	char *token, delim, **tokens;
+	char *token, *delim, **tokens;
 	int counter, i, len;
 
 	counter = 0;
-	delim = " ";
 	len = 0;
 	i = 0;
+	delim = " ";
+
 	while (buffer[i] != '\0')
 	{
-		if (buffer[i] == delim)
+		if (buffer[i] == ' ')
 			len++;
 		i++;
 	}

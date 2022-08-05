@@ -6,10 +6,14 @@
  * Return: -1 or nothing
  */
 
-int exec(char *argv)
+int exec(char **argv)
 {
 	pid_t child;
 	int status;
+	char **env = environ;
+
+	if (strcmp("exit", argv[0]) == 0)
+		exit(EXIT_SUCCESS);
 
 	child = fork();
 
@@ -20,16 +24,14 @@ int exec(char *argv)
 	}
 	if (child == 0)
 	{
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-			perror("Execution error");
-			return (-1);
-		}
+		execve(argv[0], argv, env);
+		perror("Error");
 	}
 	else
 	{
 		wait(&status);
 	}
+	return (0);
 }
 
 /**
@@ -42,7 +44,11 @@ int exec(char *argv)
 int main(int argc, char **argv)
 {
 	size_t n;
-	char **tokens, *buffer;
+	char **tokenize, *buffer;
+	int size;
+
+	buffer = NULL;
+	(void) argv;
 
 	if (argc < 1)
 		return (-1);
@@ -51,14 +57,15 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		printf("$: ");
-		if (getline(&buffer, &n, stdin) == -1)
+		size = getline(&buffer, &n, stdin);
+		if (strcmp("exit\n", buffer) == 0)
 			return (-1);
-		if (strcmp("exit", buffer) == 0)
-		{
-			free(buffer);
+		if (size == -1)
 			return (-1);
-		}
-		tokens = tokens(buffer);
-		exec(tokens);
+		if (buffer[size - 1] == '\n')
+			buffer[size - 1] = '\0';
+		tokenize = tokens(buffer);
+		exec(tokenize);
 	}
+	return (0);
 }

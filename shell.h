@@ -9,8 +9,10 @@
 #include <string.h>
 #include <string.h>
 
+extern char **environ;
+
 char *_strdup(char *str);
 char **tokens(char *buffer);
-int exec(char *argv);
+int exec(char **argv);
 
 #endif
