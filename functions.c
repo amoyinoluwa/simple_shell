@@ -41,7 +41,7 @@ char *_strdup(char *str)
 
 char **tokens(char *buffer)
 {
-	char *token, *delim, **tokens;
+	char *token, delim, **tokens;
 	int counter, i, len;
 
 	counter = 0;

@@ -7,8 +7,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
+#include <string.h>
 
-char *_strdup(char*);
-char **tokens(char*);
+char *_strdup(char *str);
+char **tokens(char *buffer);
+int exec(char *argv);
 
 #endif

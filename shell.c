@@ -6,7 +6,7 @@
  * Return: -1 or nothing
  */
 
-int exec(char *args)
+int exec(char *argv)
 {
 	pid_t child;
 	int status;
@@ -42,7 +42,6 @@ int exec(char *args)
 int main(int argc, char **argv)
 {
 	size_t n;
-	int status;
 	char **tokens, *buffer;
 
 	if (argc < 1)
