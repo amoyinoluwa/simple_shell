@@ -12,9 +12,10 @@ int exec(char **argv)
 	int status;
 	char **env = environ;
 
-	if (strcmp("exit", argv[0]) == 0)
-		exit(EXIT_SUCCESS);
-
+	if (_strcmp("exit", argv[0]) == 0)
+		exit(-1);
+	if (_strcmp("exit\n", argv[0]) == 0)
+		exit(-1);
 	child = fork();
 
 	if (child == -1)
@@ -35,6 +36,25 @@ int exec(char **argv)
 }
 
 /**
+ * free_mem - frees allocated buffer
+ * @buf: buffer
+ * Return: Nothing
+ */
+
+void free_mem(char **buf)
+{
+	int i = 0;
+
+	if (!buf || buf == NULL)
+		return;
+	while (buf[i])
+	{
+		free(buf[i]);
+		i++;
+	}
+	free(buf);
+}
+/**
  * main - main shell program
  * @argc: argument count
  * @argv: argument vector
@@ -47,18 +67,21 @@ int main(int argc, char **argv)
 	char **tokenize, *buffer;
 	int size;
 
-	buffer = NULL;
 	(void) argv;
+	tokenize = NULL;
+	buffer = NULL;
 
 	if (argc < 1)
 		return (-1);
-
+	
 	n = 0;
 	while (1)
 	{
+		free_mem(tokenize);
+		free(buffer);
 		printf("$: ");
 		size = getline(&buffer, &n, stdin);
-		if (strcmp("exit\n", buffer) == 0)
+		if (_strcmp("exit\n", buffer) == 0)
 			return (-1);
 		if (size == -1)
 			return (-1);
