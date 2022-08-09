@@ -15,5 +15,7 @@ char *_strdup(char *str);
 char **tokens(char *buffer);
 int exec(char **argv);
 int _strcmp(char *s1, char *s2);
+void print_env(void);
+int _strlen(char *s);
 
 #endif

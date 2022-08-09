@@ -83,6 +83,11 @@ int main(int argc, char **argv)
 		size = getline(&buffer, &n, stdin);
 		if (_strcmp("exit\n", buffer) == 0)
 			return (-1);
+		if (_strcmp("env", argv[0]) == 0 || _strcmp("env\n", buffer) == 0)
+		{
+			print_env();
+			continue;
+		}
 		if (size == -1)
 			return (-1);
 		if (buffer[size - 1] == '\n')

@@ -1,6 +1,24 @@
 #include "shell.h"
 
 /**
+ * _strlen - returns the length of a string
+ * @s: string passed
+ * Return: returns length of string passed
+ */
+
+int _strlen(char *s)
+{
+	int count = 0;
+
+	while (*s != '\0')
+	{
+		count++;
+		s++;
+	}
+	return (count);
+}
+
+/**
  * _strdup - return ptr to new str with copy of input
  * @str: input string
  * Return: copy of str
