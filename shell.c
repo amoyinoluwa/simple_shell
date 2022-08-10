@@ -13,9 +13,9 @@ int exec(char **argv)
 	char **env = environ;
 
 	if (_strcmp("exit", argv[0]) == 0)
-		exit(-1);
+		exit(1);
 	if (_strcmp("exit\n", argv[0]) == 0)
-		exit(-1);
+		exit(1);
 	child = fork();
 
 	if (child == -1)
@@ -77,12 +77,10 @@ int main(int argc, char **argv)
 	n = 0;
 	while (1)
 	{
-		free_mem(tokenize);
-		free(buffer);
 		printf("$: ");
 		size = getline(&buffer, &n, stdin);
 		if (_strcmp("exit\n", buffer) == 0)
-			return (-1);
+			exit(1);
 		if (_strcmp("env", argv[0]) == 0 || _strcmp("env\n", buffer) == 0)
 		{
 			print_env();
@@ -94,6 +92,8 @@ int main(int argc, char **argv)
 			buffer[size - 1] = '\0';
 		tokenize = tokens(buffer);
 		exec(tokenize);
+		free_mem(tokenize);
+		free(buffer);
 	}
 	return (0);
 }

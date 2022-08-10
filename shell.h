@@ -7,15 +7,17 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
-#include <string.h>
 
 extern char **environ;
 
 char *_strdup(char *str);
 char **tokens(char *buffer);
-int exec(char **argv);
 int _strcmp(char *s1, char *s2);
 void print_env(void);
 int _strlen(char *s);
+int _strncmp(char *s1, char *s2, int n);
+char *append_path(char *path, char *command);
+char *find_path(void);
+int exec(char **argv);
 
 #endif
