@@ -1,134 +1,94 @@
 #include "shell.h"
 
 /**
- * _strlen - returns the length of a string
- * @s: string passed
- * Return: returns length of string passed
+ * _realloc - reallocates a pointer to double the space
+ * @ptr: pointer to the old array
+ * @size: pointer to number of elements in the old array
+ *
+ * Return: pointer to the new array
  */
-
-int _strlen(char *s)
+char **_realloc(char **ptr, size_t *size)
 {
-	int count = 0;
+	char **new;
+	size_t i;
 
-	while (*s != '\0')
+	new = malloc(sizeof(char *) * ((*size) + 10));
+	if (new == NULL)
 	{
-		count++;
-		s++;
-	}
-	return (count);
-}
-
-/**
- * _strdup - return ptr to new str with copy of input
- * @str: input string
- * Return: copy of str
- */
-
-char *_strdup(char *str)
-{
-	int i;
-	int n = 0;
-	char *copy = NULL;
-
-	if (str == NULL)
+		free(ptr);
 		return (NULL);
-
-	while (str[n] != '\0')
-	{
-		n++;
 	}
-	copy = malloc((n + 1) * sizeof(char));
-
-	if (copy != NULL)
+	for (i = 0; i < (*size); i++)
 	{
-		for (i = 0; i < n; i++)
-		{
-			copy[i] = str[i];
-		}
-		copy[i] = '\0';
-		return (copy);
+		new[i] = ptr[i];
 	}
-	return (NULL);	
+	*size += 10;
+	free(ptr);
+	return (new);
 }
 
 /**
- * _strcmp - compares two strings
- * @s1: first string
- * @s2: second string
- * Return: zero or non zero
+ * check_match - checks if a character matches any in a string
+ * @c: character to check
+ * @str: string to check
+ *
+ * Return: 1 if match, 0 if not
  */
-
-int _strcmp(char *s1, char *s2)
+unsigned int check_match(char c, const char *str)
 {
-	while ((*s1 != '\0' && *s2 != '\0') && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-	if (*s1 == *s2)
-	{
-		return (0);
-	}
-	else
-	{
-		return (*s1 - *s2);
-	}
-}
+	unsigned int i;
 
-/**
- * tokens - converts str to tokens
- * @buffer: str buf
- * Return: Tokens
- */
-
-char **tokens(char *buffer)
-{
-	char *token, *delim, **tokens;
-	int counter, i, len;
-
-	counter = len = i = 0;
-	delim = " ";
-
-	while (buffer[i] != '\0')
+	for (i = 0; str[i] != '\0'; i++)
 	{
-		if (buffer[i] == ' ')
-			len++;
-		i++;
-	}
-	tokens = malloc((len + 1) * sizeof(char));
-	if (tokens == NULL)
-	{
-		fprintf(stderr, "Allocation error\n");
-		exit(1);
-	}
-	token = strtok(buffer, delim);
-	while (token)
-	{
-		tokens[counter] = _strdup(token);
-		token = strtok(NULL, delim);
-		counter++;
-	}
-	tokens[counter] = token;
-	return (tokens);
-}
-
-/**
-* _strncmp - compares two strings up to n bytes
-* @s1: compared to s2
-* @s2: compared to s1
-* @n: number of bytes
-*
-* Return: difference between s1 and s2
-*/
-
-int _strncmp(char *s1, char *s2, int n)
-{
-	int i;
-
-	for (i = 0; s1[i] && s2[i] && i < n; i++)
-	{
-		if (s1[i] != s2[i])
-			return (s1[i] - s2[i]);
+		if (c == str[i])
+			return (1);
 	}
 	return (0);
+}
+
+/**
+ * new_strtok - custom strtok
+ * @str: string to tokenize
+ * @delim: delimiter to tokenize against
+ *
+ * Return: pointer to the next token or NULL
+ */
+char *new_strtok(char *str, const char *delim)
+{
+	static char *token_start;
+	static char *next_token;
+	unsigned int i;
+
+	if (str != NULL)
+		next_token = str;
+	token_start = next_token;
+	if (token_start == NULL)
+		return (NULL);
+	for (i = 0; next_token[i] != '\0'; i++)
+	{
+		if (check_match(next_token[i], delim) == 0)
+			break;
+	}
+	if (next_token[i] == '\0' || next_token[i] == '#')
+	{
+		next_token = NULL;
+		return (NULL);
+	}
+	token_start = next_token + i;
+	next_token = token_start;
+	for (i = 0; next_token[i] != '\0'; i++)
+	{
+		if (check_match(next_token[i], delim) == 1)
+			break;
+	}
+	if (next_token[i] == '\0')
+		next_token = NULL;
+	else
+	{
+		next_token[i] = '\0';
+		next_token = next_token + i + 1;
+		if (*next_token == '\0')
+			next_token = NULL;
+	}
+	return (token_start);
 }

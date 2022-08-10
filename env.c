@@ -1,90 +1,41 @@
 #include "shell.h"
 
 /**
-* print_env - prints the environment string to stdout
-*
-* Return: 0
-*/
-void print_env(void)
+ * make_env - make the shell environment from the environment passed to main
+ * @env: environment passed to main
+ *
+ * Return: pointer to the new environment
+ */
+char **make_env(char **env)
 {
-	int x = 0;
-	char **env = environ;
+	char **newenv = NULL;
+	size_t i;
 
-	while (env[x])
+	for (i = 0; env[i] != NULL; i++)
+		;
+	newenv = malloc(sizeof(char *) * (i + 1));
+	if (newenv == NULL)
 	{
-		write(STDOUT_FILENO, (const void *)env[x], _strlen(env[x]));
-		write(STDOUT_FILENO, "\n", 1);
-		x++;
+		perror("Fatal Error");
+		exit(1);
 	}
+	for (i = 0; env[i] != NULL; i++)
+		newenv[i] = _strdup(env[i]);
+	newenv[i] = NULL;
+	return (newenv);
 }
 
 /**
-* append_path - adds path to command
-* @path: path of command
-* @command: user entered command
-*
-* Return: buffer containing command with path on success
-* NULL on failure
-*/
-
-char *append_path(char *path, char *command)
+ * free_env - free the shell's environment
+ * @env: shell's environment
+ *
+ * Return: void
+ */
+void free_env(char **env)
 {
-	char *buf;
-	size_t i = 0, j = 0;
+	unsigned int i;
 
-	if (command == 0)
-		command = "";
-
-	if (path == 0)
-		path = "";
-
-	buf = malloc(sizeof(char) * (_strlen(path) + _strlen(command) + 2));
-	if (!buf)
-		return (NULL);
-
-	while (path[i])
-	{
-		buf[i] = path[i];
-		i++;
-	}
-
-	if (path[i - 1] != '/')
-	{
-		buf[i] = '/';
-		i++;
-	}
-	while (command[j])
-	{
-		buf[i + j] = command[j];
-		j++;
-	}
-	buf[i + j] = '\0';
-	return (buf);
-}
-
-/**
-* find_path - finds the path from the global enviroment
-* Return: NULL if path is not found or path if path is found.
-*/
-
-char *find_path(void)
-{
-	int x;
-	char **env = environ, *path = NULL;
-
-	while (*env)
-	{
-		if (_strncmp(*env, "PATH=", 5) == 0)
-		{
-			path = *env;
-			while (*path && x < 5)
-			{
-				path++;
-				x++;
-			}
-			return (path);
-		}
-		env++;
-	}
-	return (NULL);
+	for (i = 0; env[i] != NULL; i++)
+		free(env[i]);
+	free(env);
 }

@@ -1,99 +1,68 @@
 #include "shell.h"
 
+/* global variable for ^C handling */
+unsigned int sig_flag;
+
 /**
- * exec - creates a child process in shell
- * @args: arguments
- * Return: -1 or nothing
+ * sig_handler - handles ^C signal interupt
+ * @uuv: unused variable (required for signal function prototype)
+ *
+ * Return: void
  */
-
-int exec(char **argv)
+static void sig_handler(int uuv)
 {
-	pid_t child;
-	int status;
-	char **env = environ;
-
-	if (_strcmp("exit", argv[0]) == 0)
-		exit(1);
-	if (_strcmp("exit\n", argv[0]) == 0)
-		exit(1);
-	child = fork();
-
-	if (child == -1)
-	{
-		perror("Process failed");
-		exit(-1);
-	}
-	if (child == 0)
-	{
-		execve(argv[0], argv, env);
-		perror("Error");
-	}
+	(void) uuv;
+	if (sig_flag == 0)
+		_puts("\n$ ");
 	else
-	{
-		wait(&status);
-	}
-	return (0);
+		_puts("\n");
 }
 
 /**
- * free_mem - frees allocated buffer
- * @buf: buffer
- * Return: Nothing
+ * main - main function for the shell
+ * @argc: number of arguments passed to main
+ * @argv: array of arguments passed to main
+ * @environment: array of environment variables
+ *
+ * Return: 0 or exit status, or ?
  */
-
-void free_mem(char **buf)
+int main(int argc __attribute__((unused)), char **argv, char **environment)
 {
-	int i = 0;
+	size_t len_buffer = 0;
+	unsigned int is_pipe = 0, i;
+	vars_t vars = {NULL, NULL, NULL, 0, NULL, 0, NULL};
 
-	if (!buf || buf == NULL)
-		return;
-	while (buf[i])
+	vars.argv = argv;
+	vars.env = make_env(environment);
+	signal(SIGINT, sig_handler);
+	if (!isatty(STDIN_FILENO))
+		is_pipe = 1;
+	if (is_pipe == 0)
+		_puts("$ ");
+	sig_flag = 0;
+	while (getline(&(vars.buffer), &len_buffer, stdin) != -1)
 	{
-		free(buf[i]);
-		i++;
-	}
-	free(buf);
-}
-/**
- * main - main shell program
- * @argc: argument count
- * @argv: argument vector
- * Return: 0 on success, -1 on failure
- */
-
-int main(int argc, char **argv)
-{
-	size_t n;
-	char **tokenize, *buffer;
-	int size;
-
-	(void) argv;
-	tokenize = NULL;
-	buffer = NULL;
-
-	if (argc < 1)
-		return (-1);
-	
-	n = 0;
-	while (1)
-	{
-		printf("$: ");
-		size = getline(&buffer, &n, stdin);
-		if (_strcmp("exit\n", buffer) == 0)
-			exit(1);
-		if (_strcmp("env", argv[0]) == 0 || _strcmp("env\n", buffer) == 0)
+		sig_flag = 1;
+		vars.count++;
+		vars.commands = tokenize(vars.buffer, ";");
+		for (i = 0; vars.commands && vars.commands[i] != NULL; i++)
 		{
-			print_env();
-			continue;
+			vars.av = tokenize(vars.commands[i], "\n \t\r");
+			if (vars.av && vars.av[0])
+				if (check_for_builtins(&vars) == NULL)
+					check_for_path(&vars);
+		free(vars.av);
 		}
-		if (size == -1)
-			return (-1);
-		if (buffer[size - 1] == '\n')
-			buffer[size - 1] = '\0';
-		tokenize = tokens(buffer);
-		exec(tokenize);
-		free_mem(tokenize);
-		free(buffer);
+		free(vars.buffer);
+		free(vars.commands);
+		sig_flag = 0;
+		if (is_pipe == 0)
+			_puts("$ ");
+		vars.buffer = NULL;
 	}
-	return (0);
+	if (is_pipe == 0)
+		_puts("\n");
+	free_env(vars.env);
+	free(vars.buffer);
+	exit(vars.status);
 }
