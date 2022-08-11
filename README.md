@@ -70,16 +70,7 @@ simple_shell is designed to run in the `Ubuntu 14.04 LTS` linux environment and 
 
 The simple_shell is designed to execute commands in a similar manner to sh, however with more limited functionality. The development of this shell is ongoing. The below features will be checked as they become available (see man page for complete information on usage):
 
-### Features
-- [x] uses the PATH
-- [x] implements builtins
-- [x] handles command line arguments
-- [x] custom strtok function
-- [x] uses exit status
-- [x] shell continues upon Crtl+C (**^C**)
-- [x] handles comments (#)
-- [x] handles **;**
-- [ ] custom getline type function
-- [ ] handles **&&** and **||**
-- [ ] aliases
-- [ ] variable replacement
+## Authors
+Joseph Ajayi | [GitHub](https://github.com/amoyinoluwa)
+
+Kaiga Munene | [GitHub](https://github.com/KaigaMunene)
