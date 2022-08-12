@@ -41,7 +41,7 @@ Example of executables:
 
 .B env
 - Prints the environment variables of the current user
- 
+
 .B exit
 - Allows the user to exit the Super Friendship SHell.
 
@@ -60,7 +60,7 @@ Examples of built-in commands:
 .\&
 .RS
 \&$ env
-.br 
+.br
 \&XDG_SESSION_ID=4
 .br
 \&TERM=xterm-256color
