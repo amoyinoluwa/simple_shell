@@ -18,8 +18,8 @@ extern char **environ;
  */
 typedef struct builtin
 {
-	char *name;
-	int (*function)(char **);
+char *name;
+int (*function)(char **);
 } builtin_t;
 
 

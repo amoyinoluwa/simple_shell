@@ -7,18 +7,18 @@
  */
 void sfsh_loop(int argc, char *argv[])
 {
-	char *line = NULL;
-	char **tokens;
-	int status = 1;
+char *line = NULL;
+char **tokens;
+int status = 1;
 
-	(void) argc;
-	(void) argv;
-	do {
-		line = sfsh_getline();
-		tokens = sfsh_tokenize(line);
-		status = sfsh_execute(tokens, line);
+(void) argc;
+(void) argv;
+do {
+line = sfsh_getline();
+tokens = sfsh_tokenize(line);
+status = sfsh_execute(tokens, line);
 
-		free(line);
-		free(tokens);
-	} while (status);
+free(line);
+free(tokens);
+} while (status);
 }

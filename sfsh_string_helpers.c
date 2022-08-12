@@ -7,16 +7,16 @@
  */
 int _strcmp(char *s1, char *s2)
 {
-	int s1d, s2d;
+int s1d, s2d;
 
-	do {
-		s1d = *s1++;
-		s2d = *s2++;
-		if (s1d == '\0')
-			return (s1d - s2d);
-	} while (s1d == s2d);
+do {
+s1d = *s1++;
+s2d = *s2++;
+if (s1d == '\0')
+return (s1d - s2d);
+} while (s1d == s2d);
 
-	return (s1d - s2d);
+return (s1d - s2d);
 }
 /**
  * _strncmp    - Checks if @s1 matches @s2 up to @length amount
@@ -30,9 +30,9 @@ int _strcmp(char *s1, char *s2)
  */
 int _strncmp(char *s1, char *s2, int length)
 {
-	while (length-- && *s1++ && *s2++ && (*s1 == *s2))
-		;
-	return (length == 0 ? 0 : *s1 - *s2);
+while (length-- && *s1++ && *s2++ && (*s1 == *s2))
+;
+return (length == 0 ? 0 : *s1 - *s2);
 }
 /**
  * _strcpy     - Makes a copy of @src string into @dest string
@@ -44,13 +44,13 @@ int _strncmp(char *s1, char *s2, int length)
  */
 char *_strcpy(char *dest, char *src)
 {
-	int i;
+int i;
 
-	for (i = 0; src[i] != '\0' && (dest[i] = src[i]); i++)
-		;
-	dest[i] = '\0';
+for (i = 0; src[i] != '\0' && (dest[i] = src[i]); i++)
+;
+dest[i] = '\0';
 
-	return (dest);
+return (dest);
 }
 /**
  * cmdcat     - Concatenates @dir and @file into executable format
@@ -62,20 +62,20 @@ char *_strcpy(char *dest, char *src)
  */
 char *cmdcat(char *dir, char *file)
 {
-	int dir_length = 0, file_length = 0;
+int dir_length = 0, file_length = 0;
 
-	while (dir[++dir_length])
-		;
+while (dir[++dir_length])
+;
 
-	dir[dir_length++] = '/';
+dir[dir_length++] = '/';
 
-	while (file[file_length])
-	{
-		dir[dir_length++] = file[file_length++];
-	}
-	dir[dir_length] = '\0';
+while (file[file_length])
+{
+dir[dir_length++] = file[file_length++];
+}
+dir[dir_length] = '\0';
 
-	return (dir);
+return (dir);
 }
 
 /**
@@ -85,9 +85,9 @@ char *cmdcat(char *dir, char *file)
  */
 int _strlen(char *str)
 {
-	int i;
+int i;
 
-	for (i = 0; str[i]; i++)
-		;
-	return (i);
+for (i = 0; str[i]; i++)
+;
+return (i);
 }
